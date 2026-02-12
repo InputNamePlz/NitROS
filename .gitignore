@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Virtual environment
+venv/
+
+# IDE / tools
+.vscode/
+.idea/
+.claude/
+
+# Project-specific
+CLAUDE.md
+docs/
+examples/
+nul
+NitROS.zip
