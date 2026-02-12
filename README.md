@@ -1,161 +1,108 @@
-# NitROS - Communication made insanely easy
+# NitROS
 
-**Nitro + ROS** - A simple, fast, and reliable communication library for robotics.
+> Robot communication in 3 lines. Zero config. Just works.
 
-## 🎯 Why NitROS?
 
-### Before (ROS)
-1. Create msg file
-2. Edit CMakeLists.txt
-3. catkin_make
-4. Wait 5 minutes
-5. Fix build errors
+---
+
+## The Problem
+
+**Before (ROS2):**
+1. Create `.msg` file + edit `CMakeLists.txt` + `package.xml`
+2. `colcon build`
+3. Wait minutes
+4. Fix build errors
+5. `source install/setup.bash`
 6. Write code
 
-### After (NitROS)
+**After (NitROS):**
 ```bash
 pip install nitros
 ```
-Done in 3 lines of code! ✨
 
-## 🚀 Quick Start
+Done.
 
-### Basic Usage
+---
+
+## Get Started
 
 ```python
 from nitros import Publisher, Subscriber
 
 # Publisher
-pub = Publisher("topic_name")
-pub.send({"x": 1, "y": 2.5})
+pub = Publisher("sensors")
+pub.send({"temperature": 23.5, "humidity": 65})
 
 # Subscriber
-def callback(msg):
-    print(msg)
-
-sub = Subscriber("topic_name", callback)
+sub = Subscriber("sensors", lambda msg: print(msg))
 ```
 
-### Camera Streaming Example
+**That's it.** No configuration. No setup. It just works.
 
-**Publisher:**
+---
+
+## Usage
+
+### Camera Streaming
+
 ```python
-import cv2
-from nitros import Publisher
-
+# Publisher
 pub = Publisher("camera", compression="image")
-cap = cv2.VideoCapture(0)
+pub.send(frame)  # numpy array from cv2
 
-while True:
-    ret, frame = cap.read()
-    pub.send(frame)  # Done!
+# Subscriber
+Subscriber("camera", lambda frame: cv2.imshow("Camera", frame))
 ```
 
-**Subscriber:**
-```python
-import cv2
-from nitros import Subscriber
-
-def show(frame):
-    cv2.imshow('Camera', frame)
-    cv2.waitKey(1)
-
-sub = Subscriber("camera", show)  # Done!
-```
-
-## 📦 Features
-
-- **Zero configuration** - Automatic peer discovery with mDNS
-- **Type flexibility** - Send dicts, lists, numpy arrays, PyTorch tensors
-- **Built-in compression** - JPEG for images (~10x), quantization+LZ4 for point clouds (~4-5x)
-- **Reliable** - TCP-based, guaranteed delivery
-- **Simple API** - Just `Publisher` and `Subscriber`
-- **Fire and forget** - `send()` never blocks, even without subscribers
-
-## 📚 Data Types
-
-### Send anything
+### Point Cloud
 
 ```python
-# Dict - just send it
-pub.send({"x": 1, "y": 2.5})
-
-# Numpy array - auto-detected
-import numpy as np
-pub.send(np.array([1, 2, 3]))
-
-# PyTorch tensor - auto-detected
-import torch
-pub.send(torch.tensor([1, 2]))
-```
-
-### Compression for large data
-
-```python
-# Images - automatic JPEG compression (~10x reduction)
-pub = Publisher("camera", compression="image")
-pub.send(camera_frame)  # numpy array
-
-# Point clouds - quantization + LZ4 (~4-5x reduction)
 pub = Publisher("lidar", compression="pointcloud")
-pub.send(point_cloud)  # numpy array
+pub.send(points)  # numpy array, ~5x compression
 ```
 
-## 🔧 Installation
+### Options
 
-**Basic (MessagePack only):**
-```bash
-pip install nitros
+```python
+Publisher("topic", compression="image")       # JPEG compression (~10x)
+Publisher("topic", compression="pointcloud")  # quantization + LZ4 (~5x)
+Publisher("topic", log=True)                  # enable logging
+Subscriber("topic", callback, log=True)       # enable logging
 ```
 
-**Full installation (with all features):**
-```bash
-pip install nitros[full]
-```
+### Supported Types
 
-**Optional dependencies:**
-```bash
-pip install nitros[compression]  # Image/pointcloud compression
-pip install nitros[discovery]    # mDNS discovery
-pip install nitros[numpy]        # Numpy support
-```
+Dicts, lists, numpy arrays, PyTorch tensors — auto-detected, auto-serialized.
 
-## 🎨 Design Philosophy
+---
 
-1. **"Just works"** - Minimal configuration, automatic discovery
-2. **"Do one thing well"** - Perfect communication only
-3. **"Reliable by default"** - TCP first, no packet loss
-4. **"Progressive enhancement"** - Start simple, advanced features when needed
+## Why NitROS?
 
-## 📊 Comparison
+| | |
+|---|---|
+| **Zero config** | mDNS auto-discovery. No IPs, no ports, no config files. |
+| **Send anything** | Dicts, numpy arrays, PyTorch tensors. |
+| **Smart compression** | JPEG for images, LZ4 for point clouds. |
+| **Reliable** | TCP-based. No dropped packets. |
+| **Fire and forget** | `send()` never blocks. |
+| **Production ready** | Auto-reconnection. Background threading. |
 
-### vs ROS
-✅ Learning curve: 5 minutes vs 5 hours
-✅ No need to build msg files
-✅ Minimal dependencies
-✅ High reliability (TCP)
-✅ Low resource usage
+---
 
-### vs ZeroMQ
-✅ Built-in compression (images, point clouds)
-✅ Automatic discovery (no configuration needed)
-✅ Automatic type detection
-✅ Robotics-specialized
+## vs Others
 
-## 🛠️ Requirements
+|  | NitROS | ROS2 | ZeroMQ |
+|---|---|---|---|
+| Setup | `pip install` | Hours | Minutes |
+| Config | None | Yes | Yes |
+| Type definitions | Auto | Manual `.msg` | Manual |
+| Discovery | Auto (mDNS) | DDS config | Manual |
+| Compression | Built-in | Manual | Manual |
 
-- Python 3.7+
-- `msgpack` (required)
-- `numpy` (optional, for array support)
-- `torch` (optional, for tensor support)
-- `opencv-python` (optional, for image compression)
-- `lz4` (optional, for pointcloud compression)
-- `zeroconf` (optional, for mDNS discovery)
+---
 
-## 📝 License
+## License
 
-MIT License
+Apache-2.0 License - see [LICENSE](LICENSE)
 
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
+**Contributing:** Issues and PRs welcome at [github.com/InputNamePlz/NitROS](https://github.com/InputNamePlz/NitROS)
