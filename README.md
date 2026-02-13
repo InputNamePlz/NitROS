@@ -83,7 +83,6 @@ Dicts, lists, numpy arrays, PyTorch tensors — auto-detected, auto-serialized.
 | **Zero config** | mDNS auto-discovery. No IPs, no ports, no config files. |
 | **Send anything** | Dicts, numpy arrays, PyTorch tensors. |
 | **Smart compression** | JPEG for images, LZ4 for point clouds. |
-| **Reliable** | TCP-based. No dropped packets. |
 | **Fire and forget** | `send()` never blocks. |
 | **Production ready** | Auto-reconnection. Background threading. |
 
