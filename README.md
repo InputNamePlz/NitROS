@@ -4,7 +4,7 @@
 
 # NitROS
 
-> Robot communication in 3 lines. Zero config. Just works.
+Robot communication in 3 lines. Zero config. Just works.
 
 
 ---
@@ -44,7 +44,7 @@ def callback(msg):
 sub = Subscriber("sensors", callback)
 ```
 
-**That's it.** No configuration. No setup. It just works.
+**That's it!** No configuration, No setup, It just works.
 
 ---
 
