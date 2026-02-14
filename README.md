@@ -1,3 +1,7 @@
+<div align="center">
+<img src="assets/logo.svg" alt="NitROS" width="400">
+</div>
+
 # NitROS
 
 > Robot communication in 3 lines. Zero config. Just works.
@@ -34,7 +38,10 @@ pub = Publisher("sensors")
 pub.send({"temperature": 23.5, "humidity": 65})
 
 # Subscriber
-sub = Subscriber("sensors", lambda msg: print(msg))
+def callback(msg):
+    print(msg)
+
+sub = Subscriber("sensors", callback)
 ```
 
 **That's it.** No configuration. No setup. It just works.
@@ -51,7 +58,11 @@ pub = Publisher("camera", compression="image")
 pub.send(frame)  # numpy array from cv2
 
 # Subscriber
-Subscriber("camera", lambda frame: cv2.imshow("Camera", frame))
+def show_frame(frame):
+    cv2.imshow("Camera", frame)
+    cv2.waitKey(1)
+
+Subscriber("camera", show_frame)
 ```
 
 ### Point Cloud
