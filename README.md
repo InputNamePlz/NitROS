@@ -83,7 +83,7 @@ Subscriber("topic", callback, log=True)       # enable logging
 
 ### Supported Types
 
-Dicts, lists, numpy arrays, PyTorch tensors — auto-detected, auto-serialized.
+Dicts, lists, numpy arrays, PyTorch tensors (auto-converted to numpy) — auto-detected, auto-serialized.
 
 ---
 
@@ -92,7 +92,7 @@ Dicts, lists, numpy arrays, PyTorch tensors — auto-detected, auto-serialized.
 | | |
 |---|---|
 | **Zero config** | mDNS auto-discovery. No IPs, no ports, no config files. |
-| **Send anything** | Dicts, numpy arrays, PyTorch tensors. |
+| **Send anything** | Dicts, numpy arrays, PyTorch tensors (auto-converted to numpy). |
 | **Smart compression** | JPEG for images, LZ4 for point clouds. |
 | **Fire and forget** | `send()` never blocks. |
 | **Production ready** | Auto-reconnection. Background threading. |
