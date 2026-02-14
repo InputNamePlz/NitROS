@@ -67,7 +67,7 @@ class Publisher:
         # Register mDNS service
         try:
             self.discovery = DiscoveryService()
-            self.discovery.register_service(self.topic, self.port)
+            self.discovery.register_service(self.topic, self.port, self.compression or "")
         except ImportError:
             _log("zeroconf not available, discovery disabled")
 

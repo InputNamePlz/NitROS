@@ -30,6 +30,9 @@ dependencies = [
     "zeroconf>=0.38.0",
 ]
 
+[project.scripts]
+nitros = "nitros.cli:main"
+
 [project.urls]
 Homepage = "https://github.com/InputNamePlz/NitROS"
 Repository = "https://github.com/InputNamePlz/NitROS"

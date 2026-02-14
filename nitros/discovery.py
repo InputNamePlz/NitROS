@@ -1,8 +1,10 @@
 """Discovery module for NitROS - mDNS service registration and browsing."""
 
 import socket
+import threading
+import time
 import uuid
-from typing import Callable, Optional
+from typing import Callable, Dict, List, Optional
 
 from .logger import _log
 
@@ -27,7 +29,7 @@ class DiscoveryService:
         self.service_info: Optional[ServiceInfo] = None
         self.browser: Optional[ServiceBrowser] = None
 
-    def register_service(self, topic: str, port: int) -> None:
+    def register_service(self, topic: str, port: int, compression: str = "") -> None:
         """
         Register a publisher service for a topic.
 
@@ -49,7 +51,7 @@ class DiscoveryService:
             service_name,
             addresses=[socket.inet_aton(local_ip)],
             port=port,
-            properties={"topic": topic},
+            properties={"topic": topic, "compression": compression},
         )
 
         # Register
@@ -123,3 +125,50 @@ class DiscoveryService:
         self.zeroconf.close()
         self.service_info = None
         _log("Discovery service closed")
+
+
+def list_all_services(timeout: float = 2.0) -> Dict[str, List[dict]]:
+    """
+    Scan the network for all active NitROS topics.
+
+    Args:
+        timeout: How long to scan in seconds
+
+    Returns:
+        Dict mapping topic names to lists of {host, port, compression}
+    """
+    if not HAS_ZEROCONF:
+        raise ImportError("zeroconf is required for service discovery")
+
+    results: Dict[str, List[dict]] = {}
+    lock = threading.Lock()
+
+    zc = Zeroconf()
+
+    class Listener:
+        def add_service(self, zc, service_type, name):
+            info = zc.get_service_info(service_type, name)
+            if not info:
+                return
+            topic = info.properties.get(b"topic", b"").decode("utf-8")
+            compression = info.properties.get(b"compression", b"").decode("utf-8")
+            host = socket.inet_ntoa(info.addresses[0])
+            port = info.port
+            with lock:
+                results.setdefault(topic, []).append({
+                    "host": host,
+                    "port": port,
+                    "compression": compression,
+                })
+
+        def remove_service(self, zc, service_type, name):
+            pass
+
+        def update_service(self, zc, service_type, name):
+            pass
+
+    browser = ServiceBrowser(zc, SERVICE_TYPE, Listener())
+    time.sleep(timeout)
+    browser.cancel()
+    zc.close()
+    return results
