@@ -99,6 +99,19 @@ Dicts, lists, numpy arrays, PyTorch tensors (auto-converted to numpy) — auto-d
 
 ---
 
+## CLI Tools
+
+Already familiar with `ros2 topic`? You already know how to use this.
+
+```bash
+nitros topic list
+nitros topic echo camera
+nitros topic hz camera
+nitros topic info camera
+```
+
+---
+
 ## vs Others
 
 |  | NitROS | ROS2 | ZeroMQ |
