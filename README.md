@@ -6,6 +6,9 @@
 
 Robot communication in 3 lines. Zero config. Just works.
 
+<div align="center">
+<img src="assets/basic.gif" alt="NitROS Demo" width="800">
+</div>
 
 ---
 
@@ -20,11 +23,17 @@ Robot communication in 3 lines. Zero config. Just works.
 6. Write code
 
 **After (NitROS):**
+1. `pip install nitros`. Done.
+
+---
+
+## Installation
+
 ```bash
 pip install nitros
 ```
 
-Done.
+That's it. No CMake, no colcon, no setup scripts.
 
 ---
 
@@ -51,6 +60,10 @@ sub = Subscriber("sensors", callback)
 ## Usage
 
 ### Camera Streaming
+
+<div align="center">
+<img src="assets/camera.gif" alt="Camera Streaming" width="800">
+</div>
 
 ```python
 # Publisher
@@ -94,8 +107,8 @@ Dicts, lists, numpy arrays, PyTorch tensors (auto-converted to numpy) — auto-d
 | **Zero config** | mDNS auto-discovery. No IPs, no ports, no config files. |
 | **Send anything** | Dicts, numpy arrays, PyTorch tensors (auto-converted to numpy). |
 | **Smart compression** | JPEG for images, LZ4 for point clouds. |
-| **Fire and forget** | `send()` never blocks. |
-| **Production ready** | Auto-reconnection. Background threading. |
+| **Non-blocking** | `send()` never blocks. |
+| **Auto-reconnection** | Background threading handles network issues. |
 
 ---
 
@@ -109,6 +122,33 @@ nitros topic echo camera
 nitros topic hz camera
 nitros topic info camera
 ```
+
+---
+
+## Limitations
+
+NitROS is **not** a full ROS2 replacement. It focuses on making simple pub/sub communication easy.
+
+**What's missing:**
+- Transform system (TF/TF2)
+- URDF support
+- Action servers
+- Service calls
+- RQT tools
+- Hardware drivers
+
+**Known issues:**
+- mDNS can be unreliable on some enterprise networks
+- Not stress-tested at large scale
+- Limited to basic pub/sub patterns
+
+**Best used for:**
+- Quick prototypes
+- Simple robot-to-laptop communication
+- Competition robots
+- Learning robot communication basics
+
+If you need the full ROS2 ecosystem, stick with ROS2. NitROS is for when you just want pub/sub to work.
 
 ---
 
